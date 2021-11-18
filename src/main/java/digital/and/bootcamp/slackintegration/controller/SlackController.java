@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import static com.slack.api.model.block.Blocks.*;
 import static com.slack.api.model.block.composition.BlockCompositions.markdownText;
@@ -78,7 +79,7 @@ public class SlackController {
         List<BlockElement> answers =  new ArrayList<>();
         Arrays.asList("Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree").forEach(value -> {
             answers.add(
-                    button(button -> button.text(plainText(value)).actionId(question+"|"+surveyId).value(value))
+                    button(button -> button.text(plainText(value)).actionId(question+"|"+surveyId+"|"+ UUID.randomUUID().toString()).value(value))
             );
         });
         return answers;
