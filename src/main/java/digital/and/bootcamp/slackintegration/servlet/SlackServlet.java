@@ -22,7 +22,7 @@ public class SlackServlet extends SlackAppServlet {
              */
             String personId = req.getPayload().getUser().getId();
             // "You're having a great day!|SURVEY_ID"
-            String[] idSplit = req.getPayload().getActions().get(0).getActionId().split("\\|");
+            String[] idSplit = req.getPayload().getActions().get(0).getValue().split("\\|");
             String question = idSplit[0];
             String surveyId = idSplit[1];
             String answer = req.getPayload().getActions().get(0).getText().getText();

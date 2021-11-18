@@ -1,7 +1,5 @@
 package digital.and.bootcamp.slackintegration.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.slack.api.Slack;
 import com.slack.api.bolt.App;
 import com.slack.api.methods.SlackApiException;
@@ -14,7 +12,10 @@ import digital.and.bootcamp.slackintegration.model.SurveySendRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,7 +26,6 @@ import java.util.UUID;
 import static com.slack.api.model.block.Blocks.*;
 import static com.slack.api.model.block.composition.BlockCompositions.markdownText;
 import static com.slack.api.model.block.composition.BlockCompositions.plainText;
-import static com.slack.api.model.block.element.BlockElements.asElements;
 import static com.slack.api.model.block.element.BlockElements.button;
 
 @Slf4j
@@ -68,7 +68,7 @@ public class SlackController {
             blocks.add(actions(
                     actions ->
                             actions.elements(
-                                getAnswers(question, surveyId)
+                                    getAnswers(question, surveyId)
                             )
             ));
         });
@@ -76,10 +76,10 @@ public class SlackController {
     }
 
     public List<BlockElement> getAnswers(String question, String surveyId) {
-        List<BlockElement> answers =  new ArrayList<>();
+        List<BlockElement> answers = new ArrayList<>();
         Arrays.asList("Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree").forEach(value -> {
             answers.add(
-                    button(button -> button.text(plainText(value)).actionId(question+"|"+surveyId+"|"+ UUID.randomUUID().toString()).value(value))
+                    button(button -> button.text(plainText(value)).value(question + "|" + surveyId + "|" + UUID.randomUUID().toString()).actionId("submittedAnswer"))
             );
         });
         return answers;
