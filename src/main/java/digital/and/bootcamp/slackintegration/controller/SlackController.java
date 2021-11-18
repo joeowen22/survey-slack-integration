@@ -43,7 +43,6 @@ public class SlackController {
                                 .channel(user.getId())
                                 .blocks(buildBlocks(surveySendRequest.getSurveyId(), surveySendRequest.getQuestions())));
                 log.info(response.getMessage().getText());
-
             } catch (IOException | SlackApiException e) {
                 e.printStackTrace();
             }
@@ -72,7 +71,7 @@ public class SlackController {
         List<BlockElement> answers =  new ArrayList<>();
         Arrays.asList("Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree").forEach(value -> {
             answers.add(
-                    button(button -> button.text(plainText(value)).actionId(question+"|"+surveyId))
+                    button(button -> button.text(plainText(value)).actionId(question+"|"+surveyId).value(value))
             );
         });
         return answers;
