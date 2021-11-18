@@ -45,6 +45,7 @@ public class SlackController {
                 slack.methods(token)
                         .chatPostMessage(req -> req
                                 .channel(user.getId())
+                                .text("A survey has been sent")
                                 .blocks(buildBlocks(surveySendRequest.getSurveyId(), surveySendRequest.getQuestions())));
             } catch (IOException | SlackApiException e) {
                 log.error(e.getMessage());
