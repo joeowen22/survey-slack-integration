@@ -34,9 +34,6 @@ public class SlackServlet extends SlackAppServlet {
                     .build();
             ResponseEntity<Void> response = new RestTemplate().postForEntity(System.getenv("ANSWERS_ENDPOINT"), answerRequest, Void.class);
 
-            if(req.getResponseUrl() != null) {
-                ctx.respond("Thanks for your answer!");
-            }
             log.info("Response: {}", response.getStatusCodeValue());
             return ctx.ack();
         });
