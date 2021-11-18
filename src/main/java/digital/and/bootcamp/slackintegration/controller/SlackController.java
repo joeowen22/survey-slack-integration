@@ -79,7 +79,7 @@ public class SlackController {
         List<BlockElement> answers = new ArrayList<>();
         Arrays.asList("Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree").forEach(value -> {
             answers.add(
-                    button(button -> button.text(plainText(value)).value(question + "|" + surveyId + "|" + UUID.randomUUID().toString()).actionId("submittedAnswer"))
+                    button(button -> button.text(plainText(value)).value(question + "|" + surveyId + "|" + UUID.randomUUID().toString()).actionId("submittedAnswer"+UUID.randomUUID()))
             );
         });
         return answers;

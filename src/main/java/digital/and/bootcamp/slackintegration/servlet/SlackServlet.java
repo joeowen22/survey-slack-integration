@@ -12,7 +12,7 @@ public class SlackServlet extends SlackAppServlet {
     public SlackServlet(App app) {
         super(app);
 
-        app.blockAction("submittedAnswer", (req, ctx) -> {
+        app.blockAction("submittedAnswer*", (req, ctx) -> {
             /**
              * Items we need to send result to results service
              * - Survey Id
