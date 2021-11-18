@@ -1,5 +1,7 @@
 package digital.and.bootcamp.slackintegration.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.slack.api.Slack;
 import com.slack.api.bolt.App;
 import com.slack.api.methods.SlackApiException;
@@ -22,6 +24,7 @@ import java.util.List;
 import static com.slack.api.model.block.Blocks.*;
 import static com.slack.api.model.block.composition.BlockCompositions.markdownText;
 import static com.slack.api.model.block.composition.BlockCompositions.plainText;
+import static com.slack.api.model.block.element.BlockElements.asElements;
 import static com.slack.api.model.block.element.BlockElements.button;
 
 @Slf4j
@@ -35,16 +38,16 @@ public class SlackController {
     public ResponseEntity<Void> sendMessageToSlack(@RequestBody SurveySendRequest surveySendRequest) throws SlackApiException, IOException {
         Slack slack = Slack.getInstance();
         String token = System.getenv("BOT_TOKEN");
+
         UsersListResponse usersListResponse = slack.methods(token).usersList(UsersListRequest.builder().build());
         usersListResponse.getMembers().forEach(user -> {
             try {
-                ChatPostMessageResponse response = slack.methods(token)
+                slack.methods(token)
                         .chatPostMessage(req -> req
                                 .channel(user.getId())
                                 .blocks(buildBlocks(surveySendRequest.getSurveyId(), surveySendRequest.getQuestions())));
-                log.info(response.getMessage().getText());
             } catch (IOException | SlackApiException e) {
-                e.printStackTrace();
+                log.error(e.getMessage());
             }
         });
 
@@ -57,6 +60,7 @@ public class SlackController {
         blocks.add(divider());
         questions.forEach(question -> {
             blocks.add(section(section -> section.text(markdownText(question))));
+            blocks.add(divider());
             blocks.add(actions(
                     actions ->
                             actions.elements(
@@ -64,6 +68,12 @@ public class SlackController {
                             )
             ));
         });
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            log.info(objectMapper.writeValueAsString(blocks));
+        } catch (JsonProcessingException e) {
+            log.error(e.getMessage());
+        }
         return blocks;
     }
 
