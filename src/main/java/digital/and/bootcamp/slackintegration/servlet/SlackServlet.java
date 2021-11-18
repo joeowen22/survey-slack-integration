@@ -5,6 +5,7 @@ import com.slack.api.bolt.servlet.SlackAppServlet;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.annotation.WebServlet;
+import java.util.regex.Pattern;
 
 @Slf4j
 @WebServlet("/slack/events")
@@ -12,7 +13,7 @@ public class SlackServlet extends SlackAppServlet {
     public SlackServlet(App app) {
         super(app);
 
-        app.blockAction("submittedAnswer*", (req, ctx) -> {
+        app.blockAction(Pattern.compile("^submittedAnswer.+$"), (req, ctx) -> {
             /**
              * Items we need to send result to results service
              * - Survey Id
