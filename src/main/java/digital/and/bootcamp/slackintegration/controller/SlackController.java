@@ -42,11 +42,13 @@ public class SlackController {
         UsersListResponse usersListResponse = slack.methods(token).usersList(UsersListRequest.builder().build());
         usersListResponse.getMembers().forEach(user -> {
             try {
-                slack.methods(token)
+                ChatPostMessageResponse surveyRequest = slack.methods(token)
                         .chatPostMessage(req -> req
                                 .channel(user.getId())
                                 .text("A survey has been sent")
                                 .blocks(buildBlocks(surveySendRequest.getSurveyId(), surveySendRequest.getQuestions())));
+
+                log.info(surveyRequest.toString());
             } catch (IOException | SlackApiException e) {
                 log.error(e.getMessage());
             }
@@ -69,12 +71,6 @@ public class SlackController {
                             )
             ));
         });
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            log.info(objectMapper.writeValueAsString(blocks));
-        } catch (JsonProcessingException e) {
-            log.error(e.getMessage());
-        }
         return blocks;
     }
 
